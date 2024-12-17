@@ -58,6 +58,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRuntimeConfig } from '#app'
+import { useRoute } from 'vue-router';
 
 const email = ref('')
 const password = ref('')
@@ -65,6 +66,7 @@ const errorMessage = ref('')
 const showPassword = ref(false)
 const showPopup = ref(false)
 const runtimeConfig = useRuntimeConfig()
+const route = useRoute()
 
 const ipBE = runtimeConfig.public.ipBE
 
@@ -86,11 +88,10 @@ async function handleLogin() {
       method: 'POST',
       body: { email: email.value, password: password.value }
     })
-    console.log('Login successful:', response)
+    navigateTo('/welcome', { query: response })
   } catch (error) {
     email.value = ''
     password.value = ''
-    alert('Invalid email or password')
   }
 }
 </script>

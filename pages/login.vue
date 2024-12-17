@@ -66,7 +66,6 @@ const errorMessage = ref('')
 const showPassword = ref(false)
 const showPopup = ref(false)
 const runtimeConfig = useRuntimeConfig()
-const route = useRoute()
 
 const ipBE = runtimeConfig.public.ipBE
 
@@ -88,7 +87,15 @@ async function handleLogin() {
       method: 'POST',
       body: { email: email.value, password: password.value }
     })
-    navigateTo('/welcome', { query: response })
+    const { name, id } = response
+    await navigateTo({
+      path: '/welcome',
+      query: {
+        name,
+        email: email.value,
+        id
+      }
+    })
   } catch (error) {
     email.value = ''
     password.value = ''

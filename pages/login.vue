@@ -85,8 +85,8 @@ function closePopup() {
 }
 
 async function handleLogin() {
-  isLoading.value = true // Show loading screen
-  loadingMessage.value = 'Logging in...' // Set custom loading message
+  isLoading.value = true
+  loadingMessage.value = 'Enteni Diluk...' 
   try {
     const response = await $fetch(`${ipBE}/api/auth/login`, {
       method: 'POST',
@@ -101,7 +101,7 @@ async function handleLogin() {
     errorMessage.value = 'Invalid email or password'
     console.error('Login error:', error)
   } finally {
-    isLoading.value = false // Hide loading screen
+    isLoading.value = false 
   }
 }
 </script>

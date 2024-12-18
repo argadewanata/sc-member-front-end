@@ -11,7 +11,7 @@ import LoadingOverlay from '~/components/LoadingOverlay.vue'
 
 // Create global loading state
 const isLoading = ref(false)
-const loadingMessage = ref('Now Loading...')
+const loadingMessage = ref('Enteni Diluk...')
 
 // Provide the loading state globally
 provide('isLoading', isLoading)

@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50">
-    <div class="bg-white p-16 rounded-lg shadow-lg w-full max-w-lg relative">
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 relative">
+    <div class="bg-white p-16 rounded-lg shadow-lg w-full max-w-lg">
       <h2 class="text-center text-2xl font-bold mb-4 text-red-600">Arek Surabaya Community</h2>
       <div class="flex justify-center mb-6">
         <img src="/LogoSC_Hitam.png" alt="Logo" class="h-40" />
@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { useRuntimeConfig } from '#app'
 
 const email = ref('')
@@ -64,8 +64,12 @@ const password = ref('')
 const errorMessage = ref('')
 const showPassword = ref(false)
 const showPopup = ref(false)
-const runtimeConfig = useRuntimeConfig()
 
+// Inject the global loading state
+const isLoading = inject('isLoading')
+const loadingMessage = inject('loadingMessage')
+
+const runtimeConfig = useRuntimeConfig()
 const ipBE = runtimeConfig.public.ipBE
 
 function togglePassword() {
@@ -81,6 +85,8 @@ function closePopup() {
 }
 
 async function handleLogin() {
+  isLoading.value = true // Show loading screen
+  loadingMessage.value = 'Logging in...' // Set custom loading message
   try {
     const response = await $fetch(`${ipBE}/api/auth/login`, {
       method: 'POST',
@@ -94,6 +100,8 @@ async function handleLogin() {
   } catch (error) {
     errorMessage.value = 'Invalid email or password'
     console.error('Login error:', error)
+  } finally {
+    isLoading.value = false // Hide loading screen
   }
 }
 </script>

@@ -58,7 +58,6 @@
 <script setup>
 import { ref } from 'vue'
 import { useRuntimeConfig } from '#app'
-import { useRoute } from 'vue-router';
 
 const email = ref('')
 const password = ref('')
@@ -87,18 +86,14 @@ async function handleLogin() {
       method: 'POST',
       body: { email: email.value, password: password.value }
     })
-    const { name, id } = response
+    const { access_token } = response
+    localStorage.setItem('access_token', access_token)
     await navigateTo({
-      path: '/welcome',
-      query: {
-        name,
-        email: email.value,
-        id
-      }
+      path: '/welcome'
     })
   } catch (error) {
-    email.value = ''
-    password.value = ''
+    errorMessage.value = 'Invalid email or password'
+    console.error('Login error:', error)
   }
 }
 </script>

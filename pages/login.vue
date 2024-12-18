@@ -38,14 +38,26 @@
           Mlebu
         </button>
       </form>
-      <p class="mt-4 text-center">
+      <div class="mt-4 flex justify-between items-center">
         <a href="#" @click.prevent="forgotPassword" class="text-sm text-red-500 hover:underline">Lali Sandi?</a>
-      </p>
+        <a href="#" @click.prevent="openRegisterPopup" class="text-sm text-red-500 hover:underline">Nggae Akun Anyar</a>
+      </div>
       <p v-if="errorMessage" class="mt-4 text-red-500 text-center">{{ errorMessage }}</p>
 
-      <div v-if="showPopup" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg shadow-lg">
+      <!-- Forgot Password Popup -->
+      <div v-if="showForgotPopup" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg shadow-lg">
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-          <p class="mb-4">Please contact admin</p>
+          <p class="mb-4">Sedang Dikerjakan</p>
+          <button @click="closePopup" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <!-- Register Popup -->
+      <div v-if="showRegisterPopup" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg shadow-lg">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+          <p class="mb-4">Sedang Dikerjakan</p>
           <button @click="closePopup" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">
             Close
           </button>
@@ -57,13 +69,14 @@
 
 <script setup>
 import { ref, inject } from 'vue'
-import { useRuntimeConfig } from '#app'
+import { useRuntimeConfig, useRouter } from '#app'
 
 const email = ref('')
 const password = ref('')
 const errorMessage = ref('')
 const showPassword = ref(false)
-const showPopup = ref(false)
+const showForgotPopup = ref(false)
+const showRegisterPopup = ref(false)
 
 // Inject the global loading state
 const isLoading = inject('isLoading')
@@ -71,22 +84,28 @@ const loadingMessage = inject('loadingMessage')
 
 const runtimeConfig = useRuntimeConfig()
 const ipBE = runtimeConfig.public.ipBE
+const router = useRouter()
 
 function togglePassword() {
   showPassword.value = !showPassword.value
 }
 
 function forgotPassword() {
-  showPopup.value = true
+  showForgotPopup.value = true
+}
+
+function openRegisterPopup() {
+  showRegisterPopup.value = true
 }
 
 function closePopup() {
-  showPopup.value = false
+  showForgotPopup.value = false
+  showRegisterPopup.value = false
 }
 
 async function handleLogin() {
   isLoading.value = true
-  loadingMessage.value = 'Enteni Diluk...' 
+  loadingMessage.value = 'Enteni Diluk...'
   try {
     const response = await $fetch(`${ipBE}/api/auth/login`, {
       method: 'POST',
@@ -101,7 +120,7 @@ async function handleLogin() {
     errorMessage.value = 'Invalid email or password'
     console.error('Login error:', error)
   } finally {
-    isLoading.value = false 
+    isLoading.value = false
   }
 }
 </script>

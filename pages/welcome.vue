@@ -27,7 +27,7 @@ onMounted(async () => {
       throw new Error('No token found')
     }
     console.log(token)
-    user.value = await $fetch(`${ipBE}/api/member/me`, {
+    user.value = await $fetch(`${ipBE}/api/member/card`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

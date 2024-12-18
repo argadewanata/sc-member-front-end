@@ -8,4 +8,12 @@ export default defineNuxtConfig({
       ipBE: process.env.NUXT_IP_BE,
     }
   },
+  app: {
+    head:{
+      title:"Arek SC",
+      meta:[
+        {name:"description", content:"Website Arek SC"},
+      ],
+    }
+  },
 })

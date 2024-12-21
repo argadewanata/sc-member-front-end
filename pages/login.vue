@@ -77,6 +77,7 @@ const errorMessage = ref('')
 const showPassword = ref(false)
 const showForgotPopup = ref(false)
 const showRegisterPopup = ref(false)
+const user = ref(null)
 
 // Inject the global loading state
 const isLoading = inject('isLoading')
@@ -113,9 +114,31 @@ async function handleLogin() {
     })
     const { access_token } = response
     localStorage.setItem('access_token', access_token)
-    await navigateTo({
-      path: '/welcome'
-    })
+
+    try {
+      const token = localStorage.getItem('access_token')
+      if (!token) {
+        throw new Error('No token found')
+      }
+      user.value = await $fetch(`${ipBE}/api/member/card`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+    } catch (error) {
+      errorMessage.value = 'Failed to fetch user information'
+      console.error('Error fetching user data:', error)
+    }
+
+    if (user.value.is_admin) {
+      await navigateTo({
+        path: '/admin'
+      })
+    } else {
+      await navigateTo({
+        path: '/welcome'
+      })
+    }
   } catch (error) {
     errorMessage.value = 'Invalid email or password'
     console.error('Login error:', error)

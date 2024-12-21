@@ -1,13 +1,16 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gray-50">
-        <div class="bg-white p-16 rounded-lg shadow-lg w-full max-w-lg text-center">
-            <h2 class="text-2xl font-bold mb-4 text-red-600">Welcome</h2>
-            <p v-if="user">ID: {{ user.id }}</p>
-            <p v-if="user">Name: {{ user.name }}</p>
-            <p v-if="user">Email: {{ user.email }}</p>
-            <p v-if="errorMessage" class="mt-4 text-red-500">{{ errorMessage }}</p>
-        </div>
+  <div class="min-h-screen flex items-center justify-center bg-gray-50">
+    <div class="bg-white p-16 rounded-lg shadow-lg w-full max-w-lg text-center">
+      <h2 class="text-2xl font-bold mb-4 text-red-600">Welcome</h2>
+      <p v-if="user">ID: {{ user.id }}</p>
+      <p v-if="user">Name: {{ user.name }}</p>
+      <p v-if="user">Email: {{ user.email }}</p>
+      <button @click="logout" class="mt-4 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
+        Metu
+      </button>
+      <p v-if="errorMessage" class="mt-4 text-red-500">{{ errorMessage }}</p>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -32,9 +35,19 @@ onMounted(async () => {
     })
   } catch (error) {
     errorMessage.value = 'Failed to fetch user information'
-    console.error('Error fetching user data:', error)
+    // Redirect to login if there's an error fetching user data
+    await navigateTo({
+        path: '/login'
+    })
   }
 })
+
+async function logout() {
+  localStorage.removeItem('access_token')
+  await navigateTo({
+    path: '/login'
+  })
+}
 </script>
 
 <style scoped></style>

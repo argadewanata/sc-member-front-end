@@ -1,7 +1,7 @@
 <template>
     <div>
         <LoadingOverlay />
-        <router-view />
+        <NuxtPage/>
     </div>
 </template>
 

@@ -53,23 +53,13 @@
           </button>
         </div>
       </div>
-
-      <!-- Register Popup -->
-      <div v-if="showRegisterPopup" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg shadow-lg">
-        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-          <p class="mb-4">Sedang Dikerjakan</p>
-          <button @click="closePopup" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">
-            Close
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, inject } from 'vue'
-import { useRuntimeConfig, useRouter } from '#app'
+import { useRuntimeConfig} from '#app'
 
 const email = ref('')
 const password = ref('')
@@ -85,7 +75,6 @@ const loadingMessage = inject('loadingMessage')
 
 const runtimeConfig = useRuntimeConfig()
 const ipBE = runtimeConfig.public.ipBE
-const router = useRouter()
 
 function togglePassword() {
   showPassword.value = !showPassword.value
@@ -95,8 +84,10 @@ function forgotPassword() {
   showForgotPopup.value = true
 }
 
-function openRegisterPopup() {
-  showRegisterPopup.value = true
+async function openRegisterPopup() {
+  await navigateTo({
+    path: '/register'
+  })
 }
 
 function closePopup() {

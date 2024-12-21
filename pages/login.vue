@@ -1,40 +1,31 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 relative">
-    <div class="bg-white p-16 rounded-lg shadow-lg w-full max-w-lg">
-      <h2 class="text-center text-2xl font-bold mb-4 text-red-600">Arek Surabaya Community</h2>
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 relative px-4">
+    <div class="bg-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-md md:max-w-lg">
+      <h2 class="text-center text-lg sm:text-xl md:text-2xl font-bold mb-4 text-red-600">Arek Surabaya Community</h2>
       <div class="flex justify-center mb-6">
-        <img src="/LogoSC_Hitam.png" alt="Logo" class="h-40" />
+        <img src="/LogoSC_Hitam.png" alt="Logo" class="h-24 sm:h-32 md:h-40" />
       </div>
       <form @submit.prevent="handleLogin">
         <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            id="email"
-            v-model="email"
-            class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm h-12 px-4"
-            required
-          />
+          <input type="email" id="email" v-model="email"
+            class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 text-sm h-12 px-4"
+            required />
         </div>
         <div class="mb-6 relative">
           <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
           <div class="relative">
-            <input
-              :type="showPassword ? 'text' : 'password'"
-              id="password"
-              v-model="password"
-              class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm h-12 px-4 pr-10"
-              required
-            />
-            <button type="button" @click="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
+            <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password"
+              class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 text-sm h-12 px-4 pr-10"
+              required />
+            <button type="button" @click="togglePassword"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
               <Icon :name="showPassword ? 'mdi-eye-off' : 'mdi-eye'" class="text-gray-500" />
             </button>
           </div>
         </div>
-        <button
-          type="submit"
-          class="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-        >
+        <button type="submit"
+          class="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
           Mlebu
         </button>
       </form>
@@ -45,7 +36,8 @@
       <p v-if="errorMessage" class="mt-4 text-red-500 text-center">{{ errorMessage }}</p>
 
       <!-- Forgot Password Popup -->
-      <div v-if="showForgotPopup" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg shadow-lg">
+      <div v-if="showForgotPopup"
+        class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg shadow-lg">
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
           <p class="mb-4">Sedang Dikerjakan</p>
           <button @click="closePopup" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">
@@ -59,7 +51,7 @@
 
 <script setup>
 import { ref, inject } from 'vue'
-import { useRuntimeConfig} from '#app'
+import { useRuntimeConfig } from '#app'
 
 const email = ref('')
 const password = ref('')
@@ -139,5 +131,4 @@ async function handleLogin() {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

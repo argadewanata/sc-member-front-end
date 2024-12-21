@@ -1,18 +1,18 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 relative">
-        <div class="bg-white p-16 rounded-lg shadow-lg w-full max-w-lg">
-            <h2 class="text-center text-2xl font-bold mb-4 text-red-600">Daftar</h2>
+    <div class="min-h-screen flex items-center justify-center bg-gray-50 relative px-4">
+        <div class="bg-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-md md:max-w-lg">
+            <h2 class="text-center text-lg sm:text-xl md:text-2xl font-bold mb-4 text-red-600">Daftar</h2>
             <form @submit.prevent="handleRegister">
                 <div class="mb-4 relative">
                     <label for="name" class="block text-sm font-medium text-gray-700">Nama</label>
                     <input type="text" id="name" v-model="name"
-                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm h-12 px-4"
+                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 text-sm h-12 px-4"
                         required />
                 </div>
                 <div class="mb-4 relative">
                     <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
                     <input type="email" id="email" v-model="email"
-                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm h-12 px-4 pr-10"
+                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 text-sm h-12 px-4 pr-10"
                         required />
                     <Icon v-if="email.value" :name="isEmailValid ? 'mdi-check-circle' : 'mdi-close-circle'"
                         class="absolute right-3 top-10 text-xl"
@@ -21,7 +21,7 @@
                 <div class="mb-4 relative">
                     <label for="whatsapp" class="block text-sm font-medium text-gray-700">Nomor WhatsApp</label>
                     <input type="text" id="whatsapp" v-model="whatsapp"
-                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm h-12 px-4 pr-10"
+                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 text-sm h-12 px-4 pr-10"
                         required />
                     <p class="text-gray-500 text-sm mt-1">Contoh Nomor Whatsapp: 08123456789</p>
                     <Icon v-if="whatsapp.value" :name="isWhatsappValid ? 'mdi-check-circle' : 'mdi-close-circle'"
@@ -31,16 +31,17 @@
                 <div class="mb-4 relative">
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                     <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password"
-                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm h-12 px-4 pr-10"
+                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 text-sm h-12 px-4 pr-10"
                         required />
                     <Icon v-if="password.value" :name="isPasswordValid ? 'mdi-check-circle' : 'mdi-close-circle'"
                         class="absolute right-3 top-10 text-xl"
                         :class="isPasswordValid ? 'text-green-500' : 'text-red-500'" />
                 </div>
                 <div class="mb-6 relative">
-                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
+                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Konfirmasi
+                        Password</label>
                     <input :type="showPassword ? 'text' : 'password'" id="confirmPassword" v-model="confirmPassword"
-                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm h-12 px-4 pr-10"
+                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 text-sm h-12 px-4 pr-10"
                         required />
                     <Icon v-if="confirmPassword.value"
                         :name="!passwordMismatch ? 'mdi-check-circle' : 'mdi-close-circle'"
@@ -54,7 +55,8 @@
             </form>
             <p v-if="errorMessage" class="mt-4 text-red-500 text-center">{{ errorMessage }}</p>
             <div class="mt-4 text-center">
-                <a href="#" @click.prevent="redirectToLogin" class="text-sm text-red-500 hover:underline">Wes nduwe akun SC</a>
+                <a href="#" @click.prevent="redirectToLogin" class="text-sm text-red-500 hover:underline">Wes nduwe akun
+                    SC</a>
             </div>
 
             <!-- Success/Failure Popup -->

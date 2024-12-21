@@ -12,13 +12,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRuntimeConfig, useRouter } from '#app'
+import { useRuntimeConfig } from '#app'
 
 const user = ref(null)
 const errorMessage = ref('')
 const runtimeConfig = useRuntimeConfig()
 const ipBE = runtimeConfig.public.ipBE
-const router = useRouter()
 
 onMounted(async () => {
   try {
@@ -26,7 +25,6 @@ onMounted(async () => {
     if (!token) {
       throw new Error('No token found')
     }
-    console.log(token)
     user.value = await $fetch(`${ipBE}/api/member/card`, {
       headers: {
         Authorization: `Bearer ${token}`

@@ -4,7 +4,7 @@
             Loading...
         </div>
         <div v-else>
-            <div v-if="hasPermission" class="bg-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-3xl">
+            <div v-if="hasPermission" class="bg-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-5xl">
                 <button @click="logout"
                     class="mt-6 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
                     Metu

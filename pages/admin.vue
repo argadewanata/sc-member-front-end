@@ -1,0 +1,104 @@
+<template>
+    <div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 relative px-4">
+        <div class="bg-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-3xl">
+            <h2 class="text-center text-lg sm:text-xl md:text-2xl font-bold mb-4 text-red-600">Admin Dashboard</h2>
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-sm text-gray-700">Page {{ page }} of {{ totalPages }}</span>
+                <select v-model="size" @change="fetchMembers" class="border border-gray-300 rounded-lg text-sm">
+                    <option v-for="option in pageSizeOptions" :key="option" :value="option">{{ option }} per page
+                    </option>
+                </select>
+            </div>
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col"
+                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID
+                        </th>
+                        <th scope="col"
+                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name
+                        </th>
+                        <th scope="col"
+                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email
+                        </th>
+                        <th scope="col"
+                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            WhatsApp</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr v-for="member in members" :key="member.id">
+                        <td class="px-3 py-4 whitespace-nowrap">{{ member.id }}</td>
+                        <td class="px-3 py-4 whitespace-nowrap">{{ member.nama_lengkap }}</td>
+                        <td class="px-3 py-4 whitespace-nowrap">{{ member.email }}</td>
+                        <td class="px-3 py-4 whitespace-nowrap">{{ member.nomor_whatsapp }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="flex justify-between mt-4">
+                <button @click="previousPage" :disabled="page === 1"
+                    class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none disabled:opacity-50">
+                    Previous
+                </button>
+                <button @click="nextPage" :disabled="page === totalPages"
+                    class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none disabled:opacity-50">
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref, onMounted, computed } from 'vue'
+import { useRuntimeConfig, useRouter } from '#app'
+
+const members = ref([])
+const page = ref(1)
+const size = ref(10)
+const totalPages = ref(1)
+const pageSizeOptions = [5, 10, 20, 50]
+const runtimeConfig = useRuntimeConfig()
+const ipBE = runtimeConfig.public.ipBE
+const router = useRouter()
+
+onMounted(fetchMembers)
+
+async function fetchMembers() {
+    try {
+        const token = localStorage.getItem('access_token')
+        if (!token) {
+            throw new Error('No token found')
+        }
+        const response = await $fetch(`${ipBE}/api/member/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            params: {
+                page: page.value,
+                size: size.value
+            }
+        })
+        members.value = response.members
+        totalPages.value = Math.ceil(response.total / size.value)
+    } catch (error) {
+        console.error('Error fetching members:', error)
+    }
+}
+
+function nextPage() {
+    if (page.value < totalPages.value) {
+        page.value++
+        fetchMembers()
+    }
+}
+
+function previousPage() {
+    if (page.value > 1) {
+        page.value--
+        fetchMembers()
+    }
+}
+</script>
+
+<style scoped></style>

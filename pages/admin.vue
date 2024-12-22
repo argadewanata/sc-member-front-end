@@ -3,87 +3,107 @@
         <div v-if="isLoading" class="text-center text-lg sm:text-xl md:text-2xl font-bold text-red-600">
             Loading...
         </div>
-        <div v-else-if="hasPermission"
-            class="bg-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-3xl">
-            <h2 class="text-center text-lg sm:text-xl md:text-2xl font-bold mb-4 text-red-600">Admin Dashboard</h2>
-            <div class="flex justify-between items-center mb-4">
-                <span class="text-sm text-gray-700">Page {{ page }} of {{ totalPages }}</span>
-                <span class="text-sm text-gray-700">Total Members: {{ totalMembers }}</span>
-                <select v-model="size" @change="fetchMembers" class="border border-gray-300 rounded-lg text-sm">
-                    <option v-for="option in pageSizeOptions" :key="option" :value="option">{{ option }} per page
-                    </option>
-                </select>
+        <div v-else>
+            <div v-if="hasPermission" class="bg-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-3xl">
+                <button @click="logout"
+                    class="mt-6 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
+                    Metu
+                </button>
+                <h2 class="text-center text-lg sm:text-xl md:text-2xl font-bold mb-4 text-red-600">Admin Dashboard</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm text-gray-700">Page {{ page }} of {{ totalPages }}</span>
+                    <span class="text-sm text-gray-700">Total Members: {{ totalMembers }}</span>
+                    <select v-model="size" @change="fetchMembers" class="border border-gray-300 rounded-lg text-sm">
+                        <option v-for="option in pageSizeOptions" :key="option" :value="option">{{ option }} per page
+                        </option>
+                    </select>
+                </div>
+                <div class="mb-4 flex">
+                    <input v-model="searchQuery" type="text" placeholder="Search by name, email, or phone"
+                        class="w-full border border-gray-300 rounded-lg py-2 px-4" />
+                    <button @click="searchMembers"
+                        class="ml-2 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
+                        Search
+                    </button>
+                </div>
+                <div v-if="members.length === 0 && searchQuery !== ''" class="text-center text-red-500 mb-4">
+                    Tidak ada member dengan nama/email/nomor berikut "{{ searchQuery }}"
+                </div>
+                <div class="overflow-x-auto">
+                    <table v-if="members.length > 0" class="min-w-full table-fixed divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col"
+                                    class="w-1/12 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    ID
+                                </th>
+                                <th scope="col"
+                                    class="w-2/12 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Name
+                                </th>
+                                <th scope="col"
+                                    class="w-3/12 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Email
+                                </th>
+                                <th scope="col"
+                                    class="w-2/12 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    WhatsApp
+                                </th>
+                                <th scope="col"
+                                    class="w-1/12 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Verified
+                                </th>
+                                <th scope="col"
+                                    class="w-1/12 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Active
+                                </th>
+                                <th scope="col"
+                                    class="w-1/12 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Admin
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr v-for="member in members" :key="member.id">
+                                <td class="px-3 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">{{ member.id
+                                    }}</td>
+                                <td class="px-3 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">{{
+                                    member.nama_lengkap }}</td>
+                                <td class="px-3 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">{{
+                                    member.email }}</td>
+                                <td class="px-3 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">{{
+                                    member.nomor_whatsapp }}</td>
+                                <td class="px-3 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">{{
+                                    member.is_verified ? 'Yes' : 'No' }}</td>
+                                <td class="px-3 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">{{
+                                    member.is_active ? 'Yes' : 'No' }}</td>
+                                <td class="px-3 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">{{
+                                    member.is_admin ? 'Yes' : 'No' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div v-if="members.length > 0" class="flex justify-between mt-4">
+                    <button @click="previousPage" :disabled="page === 1"
+                        class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none disabled:opacity-50">
+                        Previous
+                    </button>
+                    <select v-model="page" @change="fetchMembers" class="border border-gray-300 rounded-lg text-sm">
+                        <option v-for="p in totalPages" :key="p" :value="p">Page {{ p }}</option>
+                    </select>
+                    <button @click="nextPage" :disabled="page === totalPages"
+                        class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none disabled:opacity-50">
+                        Next
+                    </button>
+                </div>
             </div>
-            <div class="mb-4 flex">
-                <input v-model="searchQuery" type="text" placeholder="Search by name, email, or phone"
-                    class="w-full border border-gray-300 rounded-lg py-2 px-4" />
-                <button @click="searchMembers"
-                    class="ml-2 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
-                    Search
+            <div v-else class="bg-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-3xl text-center">
+                <h2 class="text-xl font-bold mb-4 text-red-600">You don't have permission to access this page.</h2>
+                <button @click="logout"
+                    class="mt-4 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
+                    Metu
                 </button>
             </div>
-            <div v-if="members.length === 0 && searchQuery !== ''" class="text-center text-red-500 mb-4">
-                Tidak ada member dengan nama/email/nomor berikut "{{ searchQuery }}"
-            </div>
-            <table v-if="members.length > 0" class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col"
-                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID
-                        </th>
-                        <th scope="col"
-                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name
-                        </th>
-                        <th scope="col"
-                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email
-                        </th>
-                        <th scope="col"
-                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            WhatsApp</th>
-                        <th scope="col"
-                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Verified</th>
-                        <th scope="col"
-                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Active</th>
-                        <th scope="col"
-                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admin
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="member in members" :key="member.id">
-                        <td class="px-3 py-4 whitespace-nowrap">{{ member.id }}</td>
-                        <td class="px-3 py-4 whitespace-nowrap">{{ member.nama_lengkap }}</td>
-                        <td class="px-3 py-4 whitespace-nowrap">{{ member.email }}</td>
-                        <td class="px-3 py-4 whitespace-nowrap">{{ member.nomor_whatsapp }}</td>
-                        <td class="px-3 py-4 whitespace-nowrap">{{ member.is_verified ? 'Yes' : 'No' }}</td>
-                        <td class="px-3 py-4 whitespace-nowrap">{{ member.is_active ? 'Yes' : 'No' }}</td>
-                        <td class="px-3 py-4 whitespace-nowrap">{{ member.is_admin ? 'Yes' : 'No' }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div v-if="members.length > 0" class="flex justify-between mt-4">
-                <button @click="previousPage" :disabled="page === 1"
-                    class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none disabled:opacity-50">
-                    Previous
-                </button>
-                <button @click="nextPage" :disabled="page === totalPages"
-                    class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none disabled:opacity-50">
-                    Next
-                </button>
-            </div>
-            <button @click="logout"
-                class="mt-6 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
-                Metu
-            </button>
-        </div>
-        <div v-else class="bg-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-3xl text-center">
-            <h2 class="text-xl font-bold mb-4 text-red-600">You don't have permission to access this page.</h2>
-            <button @click="logout"
-                class="mt-4 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
-                Metu
-            </button>
         </div>
     </div>
 </template>
@@ -204,4 +224,14 @@ function previousPage() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.table-fixed {
+    table-layout: fixed;
+}
+
+.overflow-ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+</style>

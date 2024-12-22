@@ -4,6 +4,7 @@
             <h2 class="text-center text-lg sm:text-xl md:text-2xl font-bold mb-4 text-red-600">Admin Dashboard</h2>
             <div class="flex justify-between items-center mb-4">
                 <span class="text-sm text-gray-700">Page {{ page }} of {{ totalPages }}</span>
+                <span class="text-sm text-gray-700">Total Members: {{ totalMembers }}</span>
                 <select v-model="size" @change="fetchMembers" class="border border-gray-300 rounded-lg text-sm">
                     <option v-for="option in pageSizeOptions" :key="option" :value="option">{{ option }} per page
                     </option>
@@ -27,7 +28,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="member in members" :key="member.id">
+                    <tr v-for="member in sortedMembers" :key="member.id">
                         <td class="px-3 py-4 whitespace-nowrap">{{ member.id }}</td>
                         <td class="px-3 py-4 whitespace-nowrap">{{ member.nama_lengkap }}</td>
                         <td class="px-3 py-4 whitespace-nowrap">{{ member.email }}</td>
@@ -55,8 +56,9 @@ import { useRuntimeConfig, useRouter } from '#app'
 
 const members = ref([])
 const page = ref(1)
-const size = ref(10)
+const size = ref(5)
 const totalPages = ref(1)
+const totalMembers = ref(0)
 const pageSizeOptions = [5, 10, 20, 50]
 const runtimeConfig = useRuntimeConfig()
 const ipBE = runtimeConfig.public.ipBE
@@ -80,11 +82,16 @@ async function fetchMembers() {
             }
         })
         members.value = response.members
+        totalMembers.value = response.total
         totalPages.value = Math.ceil(response.total / size.value)
     } catch (error) {
         console.error('Error fetching members:', error)
     }
 }
+
+const sortedMembers = computed(() => {
+    return members.value.sort((a, b) => a.id - b.id)
+})
 
 function nextPage() {
     if (page.value < totalPages.value) {

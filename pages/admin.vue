@@ -25,6 +25,15 @@
                         <th scope="col"
                             class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             WhatsApp</th>
+                        <th scope="col"
+                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Verified</th>
+                        <th scope="col"
+                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Active</th>
+                        <th scope="col"
+                            class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admin
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -33,6 +42,9 @@
                         <td class="px-3 py-4 whitespace-nowrap">{{ member.nama_lengkap }}</td>
                         <td class="px-3 py-4 whitespace-nowrap">{{ member.email }}</td>
                         <td class="px-3 py-4 whitespace-nowrap">{{ member.nomor_whatsapp }}</td>
+                        <td class="px-3 py-4 whitespace-nowrap">{{ member.is_verified ? 'Yes' : 'No' }}</td>
+                        <td class="px-3 py-4 whitespace-nowrap">{{ member.is_active ? 'Yes' : 'No' }}</td>
+                        <td class="px-3 py-4 whitespace-nowrap">{{ member.is_admin ? 'Yes' : 'No' }}</td>
                     </tr>
                 </tbody>
             </table>

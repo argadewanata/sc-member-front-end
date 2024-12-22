@@ -39,7 +39,7 @@
       <div v-if="showForgotPopup"
         class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg shadow-lg">
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-          <p class="mb-4">Sedang Dikerjakan</p>
+          <p class="mb-4">Silakan Kontak Admin</p>
           <button @click="closePopup" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">
             Close
           </button>

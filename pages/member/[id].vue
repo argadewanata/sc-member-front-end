@@ -52,6 +52,12 @@
                     Back
                 </button>
             </div>
+            <div v-if="isEditMode" class="mt-4">
+                <button @click="confirmResetPassword"
+                    class="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 focus:outline-none">
+                    Reset Password
+                </button>
+            </div>
         </div>
         <div v-else class="bg-white p-6 sm:p-10 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-lg text-center">
             <h2 class="text-xl font-bold mb-4 text-red-600">You don't have permission to access this page.</h2>
@@ -125,6 +131,32 @@ async function toggleEditMode() {
         }
     }
     isEditMode.value = !isEditMode.value
+}
+
+async function confirmResetPassword() {
+    if (confirm('Are you sure you want to reset the password to the default?')) {
+        await resetPassword()
+    }
+}
+
+async function resetPassword() {
+    try {
+        const token = localStorage.getItem('access_token')
+        if (!token) {
+            throw new Error('No token found')
+        }
+        await $fetch(`${ipBE}/api/member/reset-password/${route.params.id}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        alert('Password reset to default successfully')
+        isEditMode.value = false  // Turn off edit mode after successful reset
+    } catch (error) {
+        console.error('Error resetting password:', error)
+        alert('Failed to reset password')
+    }
 }
 
 function goBack() {

@@ -64,7 +64,8 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-for="member in members" :key="member.id">
+                            <tr v-for="member in members" :key="member.id" @click="viewMemberDetails(member.id)"
+                                class="cursor-pointer hover:bg-gray-100">
                                 <td class="px-3 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">{{ member.id
                                     }}</td>
                                 <td class="px-3 py-4 whitespace-nowrap overflow-hidden overflow-ellipsis">{{
@@ -221,6 +222,10 @@ function previousPage() {
         page.value--
         fetchMembers()
     }
+}
+
+function viewMemberDetails(id) {
+    router.push(`/member/${id}`)
 }
 </script>
 

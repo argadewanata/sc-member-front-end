@@ -18,7 +18,10 @@
                     Search
                 </button>
             </div>
-            <table class="min-w-full divide-y divide-gray-200">
+            <div v-if="members.length === 0 && searchQuery !== ''" class="text-center text-red-500 mb-4">
+                Tidak ada member dengan nama/email/nomor berikut "{{ searchQuery }}"
+            </div>
+            <table v-if="members.length > 0" class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
                         <th scope="col"
@@ -56,7 +59,7 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="flex justify-between mt-4">
+            <div v-if="members.length > 0" class="flex justify-between mt-4">
                 <button @click="previousPage" :disabled="page === 1"
                     class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none disabled:opacity-50">
                     Previous

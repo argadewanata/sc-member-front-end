@@ -10,6 +10,10 @@
                     Metu
                 </button>
                 <h2 class="text-center text-lg sm:text-xl md:text-2xl font-bold mb-4 text-red-600">Admin Dashboard</h2>
+                <button @click="goToAddMember"
+                    class="mb-4 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 focus:outline-none">
+                    Add New Member
+                </button>
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-sm text-gray-700">Page {{ page }} of {{ totalPages }}</span>
                     <span class="text-sm text-gray-700">Total Members: {{ totalMembers }}</span>
@@ -226,6 +230,10 @@ function previousPage() {
 
 function viewMemberDetails(id) {
     router.push(`/member/${id}`)
+}
+
+function goToAddMember() {
+  router.push('/member/add')
 }
 </script>
 

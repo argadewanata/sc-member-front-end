@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRuntimeConfig, useRouter } from '#app'
 
 const members = ref([])
@@ -86,6 +86,14 @@ const ipBE = runtimeConfig.public.ipBE
 const router = useRouter()
 
 onMounted(fetchMembers)
+
+// Watch for changes in the searchQuery and reset to default view if cleared
+watch(searchQuery, (newQuery) => {
+    if (newQuery === '') {
+        page.value = 1
+        fetchMembers()
+    }
+})
 
 async function fetchMembers() {
     try {
@@ -116,6 +124,7 @@ async function searchMembers() {
         if (!token) {
             throw new Error('No token found')
         }
+        page.value = 1  // Reset page to 1 when searching
         const response = await $fetch(`${ipBE}/api/member/search`, {
             headers: {
                 Authorization: `Bearer ${token}`

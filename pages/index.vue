@@ -1,13 +1,16 @@
 <template>
-    <div>
-        <p1>Home</p1>
-    </div>
+
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
+import { useRouter } from '#app'
 
+const router = useRouter()
+
+onMounted(() => {
+    router.push('/login')
+})
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style scoped></style>

@@ -1,6 +1,10 @@
 <template>
     <div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 relative px-4">
-        <div class="bg-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-3xl">
+        <div v-if="isLoading" class="text-center text-lg sm:text-xl md:text-2xl font-bold text-red-600">
+            Loading...
+        </div>
+        <div v-else-if="hasPermission"
+            class="bg-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-3xl">
             <h2 class="text-center text-lg sm:text-xl md:text-2xl font-bold mb-4 text-red-600">Admin Dashboard</h2>
             <div class="flex justify-between items-center mb-4">
                 <span class="text-sm text-gray-700">Page {{ page }} of {{ totalPages }}</span>
@@ -69,6 +73,17 @@
                     Next
                 </button>
             </div>
+            <button @click="logout"
+                class="mt-6 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
+                Metu
+            </button>
+        </div>
+        <div v-else class="bg-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg shadow-lg w-full max-w-3xl text-center">
+            <h2 class="text-xl font-bold mb-4 text-red-600">You don't have permission to access this page.</h2>
+            <button @click="logout"
+                class="mt-4 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
+                Metu
+            </button>
         </div>
     </div>
 </template>
@@ -87,8 +102,31 @@ const pageSizeOptions = [5, 10, 20, 50]
 const runtimeConfig = useRuntimeConfig()
 const ipBE = runtimeConfig.public.ipBE
 const router = useRouter()
+const hasPermission = ref(false)
+const isLoading = ref(true)
 
-onMounted(fetchMembers)
+onMounted(async () => {
+    try {
+        const token = localStorage.getItem('access_token')
+        if (!token) {
+            throw new Error('No token found')
+        }
+        const user = await $fetch(`${ipBE}/api/member/card`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        hasPermission.value = user.is_admin
+        if (hasPermission.value) {
+            await fetchMembers()
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error)
+        await router.push('/login')
+    } finally {
+        isLoading.value = false
+    }
+})
 
 // Watch for changes in the searchQuery and reset to default view if cleared
 watch(searchQuery, (newQuery) => {
@@ -144,6 +182,11 @@ async function searchMembers() {
     } catch (error) {
         console.error('Error searching members:', error)
     }
+}
+
+async function logout() {
+    localStorage.removeItem('access_token')
+    await router.push('/login')
 }
 
 function nextPage() {

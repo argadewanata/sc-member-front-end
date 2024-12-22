@@ -126,7 +126,6 @@ async function handleRegister() {
     } catch (error) {
         popupMessage.value = 'Failed to register. Please try again.'
         showPopup.value = true
-        console.error('Registration error:', error)
     }
 }
 

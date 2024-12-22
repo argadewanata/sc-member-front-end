@@ -86,7 +86,6 @@ async function addMember() {
         if (error.response && error.response.status === 400) {
             alert('Email already exists')
         } else {
-            console.error('Error adding member:', error)
             alert('Failed to add member')
         }
     }

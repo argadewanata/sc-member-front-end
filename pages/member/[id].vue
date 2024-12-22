@@ -103,7 +103,6 @@ onMounted(async () => {
             member.value = response
         }
     } catch (error) {
-        console.error('Error fetching member details:', error)
         await router.push('/login')
     } finally {
         isLoading.value = false
@@ -126,7 +125,6 @@ async function toggleEditMode() {
             })
             alert('Member updated successfully')
         } catch (error) {
-            console.error('Error updating member:', error)
             alert('Failed to update member')
         }
     }
@@ -154,7 +152,6 @@ async function resetPassword() {
         alert('Password reset to default successfully')
         isEditMode.value = false  // Turn off edit mode after successful reset
     } catch (error) {
-        console.error('Error resetting password:', error)
         alert('Failed to reset password')
     }
 }

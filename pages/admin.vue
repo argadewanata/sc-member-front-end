@@ -146,7 +146,6 @@ onMounted(async () => {
             await fetchMembers()
         }
     } catch (error) {
-        console.error('Error fetching user data:', error)
         await router.push('/login')
     } finally {
         isLoading.value = false
@@ -180,7 +179,6 @@ async function fetchMembers() {
         totalMembers.value = response.total
         totalPages.value = Math.ceil(response.total / size.value)
     } catch (error) {
-        console.error('Error fetching members:', error)
     }
 }
 
@@ -205,7 +203,6 @@ async function searchMembers() {
         totalMembers.value = response.total
         totalPages.value = Math.ceil(response.total / size.value)
     } catch (error) {
-        console.error('Error searching members:', error)
     }
 }
 

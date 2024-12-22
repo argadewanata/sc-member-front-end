@@ -73,7 +73,6 @@ async function handleChangePassword() {
         await router.push('/welcome')
     } catch (error) {
         errorMessage.value = 'Failed to change password. Please try again.'
-        console.error('Change password error:', error)
     }
 }
 </script>

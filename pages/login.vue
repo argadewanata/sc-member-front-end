@@ -117,7 +117,6 @@ async function handleLogin() {
     }
   } catch (error) {
     errorMessage.value = 'Invalid email or password'
-    console.error('Login error:', error)
   } finally {
     isLoading.value = false
   }

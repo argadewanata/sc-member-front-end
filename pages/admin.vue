@@ -10,6 +10,14 @@
                     </option>
                 </select>
             </div>
+            <div class="mb-4 flex">
+                <input v-model="searchQuery" type="text" placeholder="Search by name, email, or phone"
+                    class="w-full border border-gray-300 rounded-lg py-2 px-4" />
+                <button @click="searchMembers"
+                    class="ml-2 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
+                    Search
+                </button>
+            </div>
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
@@ -37,7 +45,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="member in sortedMembers" :key="member.id">
+                    <tr v-for="member in members" :key="member.id">
                         <td class="px-3 py-4 whitespace-nowrap">{{ member.id }}</td>
                         <td class="px-3 py-4 whitespace-nowrap">{{ member.nama_lengkap }}</td>
                         <td class="px-3 py-4 whitespace-nowrap">{{ member.email }}</td>
@@ -63,10 +71,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRuntimeConfig, useRouter } from '#app'
 
 const members = ref([])
+const searchQuery = ref('')
 const page = ref(1)
 const size = ref(5)
 const totalPages = ref(1)
@@ -101,9 +110,29 @@ async function fetchMembers() {
     }
 }
 
-const sortedMembers = computed(() => {
-    return members.value.sort((a, b) => a.id - b.id)
-})
+async function searchMembers() {
+    try {
+        const token = localStorage.getItem('access_token')
+        if (!token) {
+            throw new Error('No token found')
+        }
+        const response = await $fetch(`${ipBE}/api/member/search`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            params: {
+                search: searchQuery.value,
+                page: page.value,
+                size: size.value
+            }
+        })
+        members.value = response.members
+        totalMembers.value = response.total
+        totalPages.value = Math.ceil(response.total / size.value)
+    } catch (error) {
+        console.error('Error searching members:', error)
+    }
+}
 
 function nextPage() {
     if (page.value < totalPages.value) {

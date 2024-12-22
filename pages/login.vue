@@ -98,29 +98,22 @@ async function handleLogin() {
     const { access_token } = response
     localStorage.setItem('access_token', access_token)
 
-    try {
-      const token = localStorage.getItem('access_token')
-      if (!token) {
-        throw new Error('No token found')
-      }
-      user.value = await $fetch(`${ipBE}/api/member/card`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-    } catch (error) {
-      errorMessage.value = 'Failed to fetch user information'
-      console.error('Error fetching user data:', error)
+    const token = localStorage.getItem('access_token')
+    if (!token) {
+      throw new Error('No token found')
     }
+    const user = await $fetch(`${ipBE}/api/member/card`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
 
-    if (user.value.is_admin) {
-      await navigateTo({
-        path: '/admin'
-      })
+    if (password.value === user.nomor_whatsapp) {
+      await navigateTo('/change-password')
+    } else if (user.is_admin) {
+      await navigateTo('/admin')
     } else {
-      await navigateTo({
-        path: '/welcome'
-      })
+      await navigateTo('/welcome')
     }
   } catch (error) {
     errorMessage.value = 'Invalid email or password'
